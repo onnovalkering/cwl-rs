@@ -8,39 +8,39 @@ type Map<T> = std::collections::HashMap<String, T>;
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandLineTool {
-    arguments: Option<Vec<CommandLineToolArgument>>,
+    pub arguments: Option<Vec<CommandLineToolArgument>>,
 
-    base_command: Option<CommandLineToolBaseCommand>,
+    pub base_command: Option<CommandLineToolBaseCommand>,
 
-    class: String,
+    pub class: String,
 
-    cwl_version: String,
+    pub cwl_version: String,
 
-    doc: Option<CommandLineToolDoc>,
+    pub doc: Option<CommandLineToolDoc>,
 
-    hints: Option<YValue>,
+    pub hints: Option<YValue>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    inputs: CommandLineToolInput,
+    pub inputs: CommandLineToolInput,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    outputs: CommandLineToolOutput,
+    pub outputs: CommandLineToolOutput,
 
-    permanent_fail_codes: Option<Vec<u32>>,
+    pub permanent_fail_codes: Option<Vec<u32>>,
 
-    requirements: Option<YValue>,
+    pub requirements: Option<YValue>,
 
-    stderr: Option<CommandLineToolStderr>,
+    pub stderr: Option<CommandLineToolStderr>,
 
-    stdin: Option<CommandLineToolStdin>,
+    pub stdin: Option<CommandLineToolStdin>,
 
-    stdout: Option<CommandLineToolStdout>,
+    pub stdout: Option<CommandLineToolStdout>,
 
-    success_codes: Option<Vec<u32>>,
+    pub success_codes: Option<Vec<u32>>,
 
-    temporary_fail_codes: Option<Vec<u32>>,
+    pub temporary_fail_codes: Option<Vec<u32>>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -55,19 +55,19 @@ pub enum CommandLineToolArgument {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandLineBinding {
-    item_seperator: Option<String>,
+    pub item_seperator: Option<String>,
 
-    load_contents: Option<bool>,
+    pub load_contents: Option<bool>,
 
-    position: Option<CommandLineBindingPosition>,
+    pub position: Option<CommandLineBindingPosition>,
 
-    prefix: Option<String>,
+    pub prefix: Option<String>,
 
-    seperate: Option<bool>,
+    pub seperate: Option<bool>,
 
-    shell_quote: Option<bool>,
+    pub shell_quote: Option<bool>,
 
-    value_from: Option<CommandLineBindingValueFrom>,
+    pub value_from: Option<CommandLineBindingValueFrom>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -88,14 +88,14 @@ pub enum CommandLineBindingValueFrom {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolBaseCommand {
     BaseCommand(String),
-    Array(String)
+    Array(Vec<String>)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolDoc {
     Doc(String),
-    Array(String)
+    Array(Vec<String>)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -110,28 +110,28 @@ pub enum CommandLineToolInput {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandInputParameter {
-    default: Option<YValue>,
+    pub default: Option<YValue>,
 
-    doc: Option<CommandLineToolDoc>,
+    pub doc: Option<CommandLineToolDoc>,
 
-    format: Option<CommandLineParameterFormat>,
+    pub format: Option<CommandLineParameterFormat>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    input_binding: Option<CommandLineBinding>,
+    pub input_binding: Option<CommandLineBinding>,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    load_contents: Option<bool>,
+    pub load_contents: Option<bool>,
 
-    load_listing: Option<String>,
+    pub load_listing: Option<String>,
 
     #[serde(rename = "type")]
-    param_type: YValue,
+    pub param_type: YValue,
 
-    secondary_files: Option<CommandLineSecondaryFiles>,
+    pub secondary_files: Option<CommandLineSecondaryFiles>,
 
-    streamable: Option<bool>,
+    pub streamable: Option<bool>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -145,8 +145,8 @@ pub enum CommandLineSecondaryFiles {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SecondaryFileSchema {
-    pattern: SecondaryFileSchemaPattern,
-    required: Option<SecondaryFileSchemaRequired>
+    pub pattern: SecondaryFileSchemaPattern,
+    pub required: Option<SecondaryFileSchemaRequired>
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -175,26 +175,26 @@ pub enum CommandLineToolOutput {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandOutputParameter {
-    doc: Option<CommandLineToolDoc>,
+    pub doc: Option<CommandLineToolDoc>,
 
-    format: Option<CommandLineParameterFormat>,
+    pub format: Option<CommandLineParameterFormat>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    output_binding: Option<CommandLineBinding>,
+    pub output_binding: Option<CommandLineBinding>,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    load_contents: Option<bool>,
+    pub load_contents: Option<bool>,
 
-    load_listing: Option<String>,
+    pub load_listing: Option<String>,
 
     #[serde(rename = "type")]
-    param_type: YValue,
+    pub param_type: YValue,
 
-    secondary_files: Option<CommandLineSecondaryFiles>,
+    pub secondary_files: Option<CommandLineSecondaryFiles>,
 
-    streamable: Option<bool>,
+    pub streamable: Option<bool>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
