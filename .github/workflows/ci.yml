@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+jobs:
+  unit-tests:
+    name: Unit Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Build project
+        run: cargo build -v
+
+      - name: Run unit tests
+        run: cargo test -v --lib
