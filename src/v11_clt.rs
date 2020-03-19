@@ -1,3 +1,4 @@
+use crate::v11_cm::{Any, CwlType, Documentation, Format, SecondaryFiles};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -16,9 +17,9 @@ pub struct CommandLineTool {
 
     pub cwl_version: String,
 
-    pub doc: Option<CommandLineToolDoc>,
+    pub doc: Option<Documentation>,
 
-    pub hints: Option<YValue>,
+    pub hints: Option<YValue>, // TODO
 
     pub id: Option<String>,
 
@@ -30,13 +31,13 @@ pub struct CommandLineTool {
 
     pub permanent_fail_codes: Option<Vec<u32>>,
 
-    pub requirements: Option<YValue>,
+    pub requirements: Option<YValue>, // TODO
 
-    pub stderr: Option<CommandLineToolStderr>,
+    pub stderr: Option<String>,
 
-    pub stdin: Option<CommandLineToolStdin>,
+    pub stdin: Option<String>,
 
-    pub stdout: Option<CommandLineToolStdout>,
+    pub stdout: Option<String>,
 
     pub success_codes: Option<Vec<u32>>,
 
@@ -47,8 +48,7 @@ pub struct CommandLineTool {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolArgument {
     Argument(String),
-    Expression(YValue),
-    CommandLineBinding(CommandLineBinding),
+    Binding(CommandLineBinding),
 }
 
 #[skip_serializing_none]
@@ -67,54 +67,40 @@ pub struct CommandLineBinding {
 
     pub shell_quote: Option<bool>,
 
-    pub value_from: Option<CommandLineBindingValueFrom>,
+    pub value_from: Option<String>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineBindingPosition {
     Position(u32),
-    Expression(YValue)
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineBindingValueFrom {
-    ValueFrom(String),
-    Expression(YValue)
+    Expression(String)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolBaseCommand {
-    BaseCommand(String),
-    Array(Vec<String>)
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineToolDoc {
-    Doc(String),
-    Array(Vec<String>)
+    Command(String),
+    CommandWithArguments(Vec<String>)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolInput {
-    Array(Vec<CommandInputParameter>),
-    Map(Map<CommandInputParameter>),
-    Types(Map<YValue>)
+    ParameterArray(Vec<CommandInputParameter>),
+    ParameterMap(Map<CommandInputParameter>),
+    TypeMap(Map<CommandLineToolInputType>)
 }
 
 #[skip_serializing_none]
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandInputParameter {
-    pub default: Option<YValue>,
+    pub default: Option<Any>,
 
-    pub doc: Option<CommandLineToolDoc>,
+    pub doc: Option<Documentation>,
 
-    pub format: Option<CommandLineParameterFormat>,
+    pub format: Option<Format>,
 
     pub id: Option<String>,
 
@@ -126,58 +112,42 @@ pub struct CommandInputParameter {
 
     pub load_listing: Option<String>,
 
-    #[serde(rename = "type")]
-    pub param_type: YValue,
+    pub r#type: CommandInputParameterType,
 
-    pub secondary_files: Option<CommandLineSecondaryFiles>,
+    pub secondary_files: Option<SecondaryFiles>,
 
     pub streamable: Option<bool>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineSecondaryFiles {
-    SecondaryFile(SecondaryFileSchema),
-    Array(Vec<SecondaryFileSchema>),
-}
-
-#[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct SecondaryFileSchema {
-    pub pattern: SecondaryFileSchemaPattern,
-    pub required: Option<SecondaryFileSchemaRequired>
+pub enum CommandInputParameterType {
+    Type(CommandLineToolInputType),
+    TypeArray(Vec<CommandLineToolInputType>)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum SecondaryFileSchemaPattern {
-    Pattern(String),
-    Expression(YValue)
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum SecondaryFileSchemaRequired {
-    Required(bool),
-    Expression(YValue)
+pub enum CommandLineToolInputType {
+    CwlType(CwlType),
+    Schema(YValue), // TODO
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum CommandLineToolOutput {
-    Array(Vec<CommandOutputParameter>),
-    Map(Map<CommandOutputParameter>),
-    Types(Map<YValue>)
+    ParameterArray(Vec<CommandOutputParameter>),
+    ParameterMap(Map<CommandOutputParameter>),
+    TypeMap(Map<CommandLineToolOutputType>)
 }
 
 #[skip_serializing_none]
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CommandOutputParameter {
-    pub doc: Option<CommandLineToolDoc>,
+    pub doc: Option<Documentation>,
 
-    pub format: Option<CommandLineParameterFormat>,
+    pub format: Option<Format>,
 
     pub id: Option<String>,
 
@@ -189,39 +159,23 @@ pub struct CommandOutputParameter {
 
     pub load_listing: Option<String>,
 
-    #[serde(rename = "type")]
-    pub param_type: YValue,
+    pub r#type: CommandOutputParameterType,
 
-    pub secondary_files: Option<CommandLineSecondaryFiles>,
+    pub secondary_files: Option<SecondaryFiles>,
 
     pub streamable: Option<bool>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineParameterFormat {
-    Format(String),
-    Array(Vec<String>),
-    Expression(YValue),
+pub enum CommandOutputParameterType {
+    Type(CommandLineToolOutputType),
+    TypeArray(Vec<CommandLineToolOutputType>)
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineToolStderr {
-    Stderr(String),
-    Expression(YValue)
-}
-
-#[serde(rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineToolStdin {
-    Stdin(String),
-    Expression(YValue)
-}
-
-#[serde(rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum CommandLineToolStdout {
-    Stdout(String),
-    Expression(YValue)
+pub enum CommandLineToolOutputType {
+    CwlType(CwlType),
+    Schema(YValue), // TODO
 }

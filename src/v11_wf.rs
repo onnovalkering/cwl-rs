@@ -1,3 +1,4 @@
+use crate::v11_cm::{Any, CwlType, Documentation, Format, SecondaryFiles};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -12,9 +13,9 @@ pub struct Workflow {
 
     cwl_version: String,
 
-    doc: Option<WorkflowDoc>,
+    doc: Option<Documentation>,
 
-    hints: Option<YValue>,
+    hints: Option<YValue>, // TODO
 
     id: Option<String>,
 
@@ -26,46 +27,36 @@ pub struct Workflow {
 
     steps: WorkflowSteps,
 
-    requirements: Option<YValue>,
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum WorkflowDoc {
-    Doc(String),
-    Array(Vec<String>),
+    requirements: Option<YValue>, // TODO
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum WorkflowInputs {
-    Array(Vec<WorkflowInputParameter>),
-    Map(Map<WorkflowInputParameter>),
-    Types(Map<String>)
+    ParameterArray(Vec<WorkflowInputParameter>),
+    ParameterMap(Map<WorkflowInputParameter>),
+    TypeMap(Map<WorkflowInputType>)
 }
 
 #[skip_serializing_none]
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowInputParameter {
-    #[serde(rename = "type")]
-    param_type: YValue,
+    r#type: WorkflowInputParameterType,
 
     label: Option<String>,
 
-    secondary_files: WorkflowSecondaryFiles,
+    secondary_files: SecondaryFiles,
 
     streamable: Option<bool>,
 
-    default: Option<YValue>,
+    default: Option<Any>,
 
-    doc: Option<WorkflowDoc>,
+    doc: Option<Documentation>,
 
     id: Option<String>,
 
-    input_binding: Option<WorkflowInputBinding>,
-
-    format: Option<WorkflowParameterFormat>,
+    format: Option<Format>,
 
     load_contents: Option<bool>,
 
@@ -74,99 +65,82 @@ pub struct WorkflowInputParameter {
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowInputParameterType {
+    Type(WorkflowInputType),
+    TypeArray(Vec<WorkflowInputType>),
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowInputType {
+    CwlType(CwlType),
+    Schema(YValue), // TODO
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum WorkflowOutputs {
-    Array(Vec<WorkflowOutputParameter>),
-    Map(Map<WorkflowOutputParameter>),
-    Types(Map<YValue>)
+    ParameterArray(Vec<WorkflowOutputParameter>),
+    ParameterMap(Map<WorkflowOutputParameter>),
+    TypeMap(Map<WorkflowOutputType>),
 }
 
 #[skip_serializing_none]
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowOutputParameter {
-    #[serde(rename = "type")]
-    param_type: YValue,
+    r#type: WorkflowOutputParameterType,
 
     label: Option<String>,
 
-    secondary_files: WorkflowSecondaryFiles,
+    secondary_files: SecondaryFiles,
 
     streamable: Option<bool>,
 
     default: Option<YValue>,
 
-    doc: Option<WorkflowDoc>,
+    doc: Option<Documentation>,
 
     id: Option<String>,
 
-    format: Option<WorkflowParameterFormat>,
+    format: Option<Format>,
 
-    output_source: Option<WorkflowOutputSource>,
+    output_source: Option<WorkflowOutputParameterOutputSource>,
 
     link_merge: Option<String>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowOutputParameterType {
+    Type(WorkflowOutputType),
+    TypeArray(Vec<WorkflowOutputType>),
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowOutputType {
+    CwlType(CwlType),
+    Schema(YValue), // TODO
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowOutputParameterOutputSource {
+    OutputSource(String),
+    OutputSourceArray(Vec<String>)
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum WorkflowSteps {
-    Array(Vec<WorkflowStep>),
-    Map(Map<WorkflowStep>),
+    StepArray(Vec<WorkflowStep>),
+    StepMap(Map<WorkflowStep>),
 }
 
 #[skip_serializing_none]
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowStep {
-
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum WorkflowSecondaryFiles {
-    SecondaryFile(SecondaryFileSchema),
-    Array(Vec<SecondaryFileSchema>),
-}
-
-#[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct SecondaryFileSchema {
-    pub pattern: SecondaryFileSchemaPattern,
-    pub required: Option<SecondaryFileSchemaRequired>
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum SecondaryFileSchemaPattern {
-    Pattern(String),
-    Expression(YValue)
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum SecondaryFileSchemaRequired {
-    Required(bool),
-    Expression(YValue)
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum WorkflowParameterFormat {
-    Format(String),
-    Array(Vec<String>),
-    Expression(YValue),
-}
-
-#[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct WorkflowInputBinding {
-    pub load_contents: Option<bool>
-}
-
-#[serde(untagged, rename_all = "camelCase")]
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub enum WorkflowOutputSource {
-    OutputSource(String),
-    Array(Vec<String>)
+    // TODO
 }
