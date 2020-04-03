@@ -1,4 +1,4 @@
-use crate::v11_cm::{Any, CwlType, Documentation, Format, SecondaryFiles};
+use crate::v11_cm::{Any, CwlType, Documentation, Format, Schema, SecondaryFiles};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -42,6 +42,12 @@ pub struct CommandLineTool {
     pub success_codes: Option<Vec<u32>>,
 
     pub temporary_fail_codes: Option<Vec<u32>>,
+
+    #[serde(flatten)]
+    pub schema: Schema,
+
+    #[serde(rename = "$namespaces")]
+    pub namespaces: Option<YValue>, // TODO
 }
 
 #[serde(untagged, rename_all = "camelCase")]

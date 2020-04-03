@@ -1,4 +1,4 @@
-use crate::v11_cm::{Any, CwlType, Documentation, Format, SecondaryFiles};
+use crate::v11_cm::{Any, CwlType, Documentation, Format, Schema, SecondaryFiles};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -9,25 +9,31 @@ type Map<T> = std::collections::HashMap<String, T>;
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Workflow {
-    class: String,
+    pub class: String,
 
-    cwl_version: String,
+    pub cwl_version: String,
 
-    doc: Option<Documentation>,
+    pub doc: Option<Documentation>,
 
-    hints: Option<YValue>, // TODO
+    pub hints: Option<YValue>, // TODO
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    inputs: WorkflowInputs,
+    pub inputs: WorkflowInputs,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    outputs: WorkflowOutputs,
+    pub outputs: WorkflowOutputs,
 
-    steps: WorkflowSteps,
+    pub steps: WorkflowSteps,
 
-    requirements: Option<YValue>, // TODO
+    pub requirements: Option<YValue>, // TODO
+
+    #[serde(flatten)]
+    pub schema: Schema,
+
+    #[serde(rename = "$namespaces")]
+    pub namespaces: Option<YValue>, // TODO
 }
 
 #[serde(untagged, rename_all = "camelCase")]

@@ -2,6 +2,22 @@ use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
 
+#[skip_serializing_none]
+#[serde(rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Schema {
+    #[serde(rename = "s:author")]
+    pub author: Option<YValue>, // TODO
+    #[serde(rename = "s:description")]
+    pub description: Option<String>,
+    #[serde(rename = "s:license")]
+    pub license: Option<String>,
+    #[serde(rename = "s:name")]
+    pub name: Option<String>,
+    #[serde(rename = "s:version")]
+    pub version: Option<String>,
+}
+
 #[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum SecondaryFiles {
