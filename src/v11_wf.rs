@@ -52,7 +52,7 @@ pub struct WorkflowInputParameter {
 
     pub label: Option<String>,
 
-    pub secondary_files: SecondaryFiles,
+    pub secondary_files: Option<SecondaryFiles>,
 
     pub streamable: Option<bool>,
 
@@ -99,7 +99,7 @@ pub struct WorkflowOutputParameter {
 
     pub label: Option<String>,
 
-    pub secondary_files: SecondaryFiles,
+    pub secondary_files: Option<SecondaryFiles>,
 
     pub streamable: Option<bool>,
 
