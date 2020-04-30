@@ -124,3 +124,17 @@ pub enum Format {
     Format(String),
     Formats(Vec<String>),
 }
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum Scatter {
+    Parameter(String),
+    Parameters(Vec<String>)
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum Source {
+    Source(String),
+    Sources(Vec<String>)
+}

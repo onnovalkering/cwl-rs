@@ -1,4 +1,4 @@
-use crate::v11_cm::{Any, CwlType, Documentation, Format, Schema, SecondaryFiles};
+use crate::v11_cm::{Any, CwlType, Documentation, Format, Schema, SecondaryFiles, Scatter, Source};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -148,5 +148,52 @@ pub enum WorkflowSteps {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowStep {
-    // TODO
+    pub r#in: WorkflowStepIn,
+
+    pub out: Vec<String>,
+
+    pub run: String,
+
+    pub id: Option<String>,
+
+    pub label: Option<String>,
+
+    pub doc: Option<Documentation>,
+
+    pub requirements: Option<YValue>, // TODO
+
+    pub hints: Option<YValue>, // TODO
+
+    pub scatter: Option<Scatter>,
+
+    pub scatter_method: Option<String>
+}
+
+#[serde(untagged, rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub enum WorkflowStepIn {
+    InputArray(Vec<WorkflowStepInput>),
+    InputMap(Map<WorkflowStepInput>),
+    InputSourceMap(Map<Source>),
+}
+
+#[skip_serializing_none]
+#[serde(rename_all = "camelCase")]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct WorkflowStepInput {
+    pub id: Option<String>,
+
+    pub source: Option<Source>,
+
+    pub link_merge: Option<String>,
+
+    pub load_contents: Option<bool>,
+
+    pub load_listing: Option<String>,
+
+    pub label: Option<String>,
+
+    pub default: Option<Any>,
+
+    pub value_from: Option<String>,
 }
