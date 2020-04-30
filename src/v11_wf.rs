@@ -48,25 +48,25 @@ pub enum WorkflowInputs {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowInputParameter {
-    r#type: WorkflowInputParameterType,
+    pub r#type: WorkflowInputParameterType,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    secondary_files: SecondaryFiles,
+    pub secondary_files: SecondaryFiles,
 
-    streamable: Option<bool>,
+    pub streamable: Option<bool>,
 
-    default: Option<Any>,
+    pub default: Option<Any>,
 
-    doc: Option<Documentation>,
+    pub doc: Option<Documentation>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    format: Option<Format>,
+    pub format: Option<Format>,
 
-    load_contents: Option<bool>,
+    pub load_contents: Option<bool>,
 
-    load_listing: Option<String>,
+    pub load_listing: Option<String>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
@@ -95,25 +95,25 @@ pub enum WorkflowOutputs {
 #[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WorkflowOutputParameter {
-    r#type: WorkflowOutputParameterType,
+    pub r#type: WorkflowOutputParameterType,
 
-    label: Option<String>,
+    pub label: Option<String>,
 
-    secondary_files: SecondaryFiles,
+    pub secondary_files: SecondaryFiles,
 
-    streamable: Option<bool>,
+    pub streamable: Option<bool>,
 
-    default: Option<YValue>,
+    pub default: Option<YValue>,
 
-    doc: Option<Documentation>,
+    pub doc: Option<Documentation>,
 
-    id: Option<String>,
+    pub id: Option<String>,
 
-    format: Option<Format>,
+    pub format: Option<Format>,
 
-    output_source: Option<WorkflowOutputParameterOutputSource>,
+    pub output_source: Option<WorkflowOutputParameterOutputSource>,
 
-    link_merge: Option<String>,
+    pub link_merge: Option<String>,
 }
 
 #[serde(untagged, rename_all = "camelCase")]
