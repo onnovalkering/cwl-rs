@@ -1,8 +1,21 @@
 [package]
 name = "cwl"
 version = "0.1.0"
+description = "The Common Workflow Language (CWL) object model for Rust."
 authors = ["Onno Valkering"]
+repository = "https://github.com/onnovalkering/cwl-rs"
+documentation = "https://docs.rs/cwl"
+keywords  = ["cwl"]
 edition = "2018"
+license = "MIT"
+exclude = [
+    ".github/*",
+    ".editorconfig",
+    ".gitignore",
+    ".travis.yml",
+    "Dockerfile",
+    "rustfmt.toml",
+]
 
 [dependencies]
 failure = "0.1"
