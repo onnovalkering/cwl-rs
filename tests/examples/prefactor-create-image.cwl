@@ -99,7 +99,7 @@ arguments:
 requirements:
   - class: InlineJavascriptRequirement
 $schemas:
-  - 'https://schema.org/docs/schema_org_rdfa.html'
+  - 'https://schema.org/version/latest/schema.rdf'
 's:author':
   's:person.url': 'https://orcid.org/0000-0001-5125-9539'
 's:license': 'https://mit-license.org/'
