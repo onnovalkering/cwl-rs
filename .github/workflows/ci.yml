@@ -1,6 +1,7 @@
 name: CI
-
-on: [push]
+on:
+  pull_request: 
+  push:
 
 jobs:
   unit-tests:
@@ -8,15 +9,31 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Build project
         run: cargo build -v
 
       - name: Run unit tests
         run: cargo test -v --lib
+
+  integration-tests:
+    name: Integration Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Build project
+        run: cargo build -v
+
+      - name: Run integration tests
+        run: cargo test -v --test v11_clt --test v11_wf
