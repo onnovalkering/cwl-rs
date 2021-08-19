@@ -3,8 +3,8 @@ use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Schema {
     #[serde(rename = "s:author")]
     pub author: Option<YValue>, // TODO
@@ -18,36 +18,36 @@ pub struct Schema {
     pub version: Option<String>,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum SecondaryFiles {
     Schema(SecondaryFileSchema),
     Schemas(Vec<SecondaryFileSchema>),
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SecondaryFileSchema {
     pattern: String,
     required: SecondaryFileSchemaRequired,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum SecondaryFileSchemaRequired {
     Boolean(bool),
     Expression(String),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum Any {
-    Any(YValue)
+    Any(YValue),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum CwlType {
     Null,
     Boolean(bool),
@@ -56,13 +56,13 @@ pub enum CwlType {
     Float(f32),
     Double(f64),
     Str(String),
-    File(File),
+    File(Box<File>),
     Directory(Directory),
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct File {
     pub class: String,
 
@@ -90,8 +90,8 @@ pub struct File {
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Directory {
     pub class: String,
 
@@ -104,37 +104,37 @@ pub struct Directory {
     pub listing: Option<Vec<FileOrDirectory>>,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum FileOrDirectory {
     File(File),
     Directory(Directory),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum Documentation {
     SingleLine(String),
-    MultiLine(Vec<String>)
+    MultiLine(Vec<String>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum Format {
     Format(String),
     Formats(Vec<String>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum Scatter {
     Parameter(String),
-    Parameters(Vec<String>)
+    Parameters(Vec<String>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum Source {
     Source(String),
-    Sources(Vec<String>)
+    Sources(Vec<String>),
 }

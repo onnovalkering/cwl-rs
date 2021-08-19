@@ -1,45 +1,40 @@
 use crate::v11_clt::CommandLineTool;
 use crate::v11_cm::Schema;
 use crate::v11_wf::Workflow;
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
-use serde_yaml::Value as YValue;
+use serde_yaml::Value;
 use std::fs::File;
 use std::io::{BufReader, Read};
-use std::path::PathBuf;
+use std::path::Path;
+use std::str::FromStr;
 
-type FResult<T> = Result<T, failure::Error>;
+const SUPPORTED_VERSIONS: &[&str] = &["v1.0", "v1.1"];
 
-const SUPPORTED_VERSIONS: &[&'static str] = &["v1.0", "v1.1"];
-
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub enum CwlDocument {
     CommandLineTool(CommandLineTool),
     Workflow(Workflow),
 }
 
 impl CwlDocument {
-    pub fn from_path(path: &PathBuf) -> FResult<CwlDocument> {
+    pub fn from_path(path: &Path) -> Result<CwlDocument> {
         let file = File::open(path)?;
         let buf_reader = BufReader::new(file);
 
         CwlDocument::from_reader(buf_reader)
     }
 
-    pub fn from_reader<R: Read>(r: R) -> FResult<CwlDocument> {
+    pub fn from_reader<R: Read>(r: R) -> Result<CwlDocument> {
         let v = serde_yaml::from_reader(r)?;
-        CwlDocument::from_value(v)
+        CwlDocument::from_yaml(v)
     }
 
-    pub fn from_str(s: &str) -> FResult<CwlDocument> {
-        let v = serde_yaml::from_str(&s)?;
-        CwlDocument::from_value(v)
-    }
-
-    pub fn from_value(v: YValue) -> FResult<CwlDocument> {
+    pub fn from_yaml(v: Value) -> Result<CwlDocument> {
         // Check that we support the CWL specification version of the document.
-        if let Some(YValue::String(version)) = v.get("cwlVersion") {
+        if let Some(Value::String(version)) = v.get("cwlVersion") {
             let error_msg = format!("Unsupported CWL specification version: {}", version);
             ensure!(SUPPORTED_VERSIONS.contains(&version.as_str()), error_msg);
         } else {
@@ -47,15 +42,15 @@ impl CwlDocument {
         }
 
         // Deserialize into CommandLineTool or Workflow based on class property.
-        if let Some(YValue::String(class)) = v.get("class") {
+        if let Some(Value::String(class)) = v.get("class") {
             match class.as_str() {
                 "CommandLineTool" => {
                     let clt = serde_yaml::from_value::<CommandLineTool>(v)?;
-                    return Ok(CwlDocument::CommandLineTool(clt));
+                    Ok(CwlDocument::CommandLineTool(clt))
                 }
                 "Workflow" => {
                     let wf = serde_yaml::from_value::<Workflow>(v)?;
-                    return Ok(CwlDocument::Workflow(wf));
+                    Ok(CwlDocument::Workflow(wf))
                 }
                 _ => bail!("Unsupported CWL document class: {}", class),
             }
@@ -71,5 +66,14 @@ impl CwlDocument {
             CommandLineTool(clt) => clt.schema.clone(),
             Workflow(wf) => wf.schema.clone(),
         }
+    }
+}
+
+impl FromStr for CwlDocument {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let v = serde_yaml::from_str(s)?;
+        CwlDocument::from_yaml(v)
     }
 }

@@ -1,4 +1,4 @@
-use crate::v11_cm::{Any, CwlType, Documentation, Format, Schema, SecondaryFiles, Scatter, Source};
+use crate::v11_cm::{Any, CwlType, Documentation, Format, Scatter, Schema, SecondaryFiles, Source};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use serde_yaml::Value as YValue;
@@ -6,8 +6,8 @@ use serde_yaml::Value as YValue;
 type Map<T> = std::collections::HashMap<String, T>;
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Workflow {
     pub class: String,
 
@@ -36,17 +36,17 @@ pub struct Workflow {
     pub namespaces: Option<YValue>, // TODO
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowInputs {
     ParameterArray(Vec<WorkflowInputParameter>),
     ParameterMap(Map<WorkflowInputParameter>),
-    TypeMap(Map<WorkflowInputType>)
+    TypeMap(Map<WorkflowInputType>),
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkflowInputParameter {
     pub r#type: WorkflowInputParameterType,
 
@@ -69,22 +69,22 @@ pub struct WorkflowInputParameter {
     pub load_listing: Option<String>,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowInputParameterType {
     Type(WorkflowInputType),
     TypeArray(Vec<WorkflowInputType>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowInputType {
     CwlType(CwlType),
     Schema(YValue), // TODO
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowOutputs {
     ParameterArray(Vec<WorkflowOutputParameter>),
     ParameterMap(Map<WorkflowOutputParameter>),
@@ -92,8 +92,8 @@ pub enum WorkflowOutputs {
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkflowOutputParameter {
     pub r#type: WorkflowOutputParameterType,
 
@@ -116,37 +116,37 @@ pub struct WorkflowOutputParameter {
     pub link_merge: Option<String>,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowOutputParameterType {
     Type(WorkflowOutputType),
     TypeArray(Vec<WorkflowOutputType>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowOutputType {
     CwlType(CwlType),
     Schema(YValue), // TODO
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowOutputParameterOutputSource {
     OutputSource(String),
-    OutputSourceArray(Vec<String>)
+    OutputSourceArray(Vec<String>),
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowSteps {
     StepArray(Vec<WorkflowStep>),
     StepMap(Map<WorkflowStep>),
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkflowStep {
     pub r#in: WorkflowStepIn,
 
@@ -166,11 +166,11 @@ pub struct WorkflowStep {
 
     pub scatter: Option<Scatter>,
 
-    pub scatter_method: Option<String>
+    pub scatter_method: Option<String>,
 }
 
-#[serde(untagged, rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged, rename_all = "camelCase")]
 pub enum WorkflowStepIn {
     InputArray(Vec<WorkflowStepInput>),
     InputMap(Map<WorkflowStepInput>),
@@ -178,8 +178,8 @@ pub enum WorkflowStepIn {
 }
 
 #[skip_serializing_none]
-#[serde(rename_all = "camelCase")]
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct WorkflowStepInput {
     pub id: Option<String>,
 

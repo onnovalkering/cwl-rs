@@ -2,9 +2,7 @@ mod common;
 
 #[test]
 fn real_world_wfs() {
-    let files = [
-        "tests/examples/prefactor.cwl",
-    ];
+    let files = ["tests/examples/prefactor.cwl"];
 
     for file in &files {
         let doc = common::load(file);
