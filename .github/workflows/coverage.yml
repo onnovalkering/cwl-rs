@@ -1,5 +1,6 @@
 name: Coverage
 on:
+  pull_request:    
   push:
     branches:
       - master
@@ -10,6 +11,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
       - name: Run Tarpaulin
         uses: actions-rs/tarpaulin@v0.1
