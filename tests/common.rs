@@ -1,13 +1,12 @@
+use anyhow::Result;
 use cwl::v11::CwlDocument;
 use cwl::v11_clt::CommandLineTool;
 use cwl::v11_wf::Workflow;
 use std::fs::File;
 use std::io::BufReader;
 
-type FResult<T> = Result<T, failure::Error>;
-
 #[allow(dead_code)]
-pub fn load(path: &str) -> FResult<CwlDocument> {
+pub fn load(path: &str) -> Result<CwlDocument> {
     let file = File::open(path).unwrap();
     let buf_reader = BufReader::new(file);
 
